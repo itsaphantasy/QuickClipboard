@@ -59,16 +59,16 @@ jobs:
         env:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ""
+          
+          
         with:
           tagName: ${{ github.ref_name }}
           releaseName: 'QuickClipboard ${{ github.ref_name }}'
           releaseBody: 'https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }}'
           releaseDraft: true
           prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'rc') || contains(github.ref_name, 'dev') }}
-          includeUpdaterJson: true
-          updaterJsonKeepUniversal: true
+          includeUpdaterJson: false
+          updaterJsonKeepUniversal: false
 
       - name: Get version from tag
         id: version
