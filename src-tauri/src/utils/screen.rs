@@ -450,7 +450,7 @@ pub fn get_monitor_refresh_rate(_monitor: &xcap::Monitor) -> Option<u32> {
                     break;
                 }
                 device_index += 1;
-                if (display_device.StateFlags & DISPLAY_DEVICE_ACTIVE) == 0 {
+                if !display_device.StateFlags.contains(DISPLAY_DEVICE_ACTIVE) {
                     continue;
                 }
 
