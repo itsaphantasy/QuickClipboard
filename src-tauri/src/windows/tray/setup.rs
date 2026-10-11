@@ -19,6 +19,11 @@ fn guard_tray_click_region(rect: tauri::Rect) {
 }
 
 pub fn setup_tray(app: &AppHandle) -> Result<(), Box<dyn std::error::Error>> {
+    // 根本修复：如果用户配置了隐藏托盘，直接不构建托盘图标，彻底避免 Windows 缓存延迟导致重启图标复活
+    if !crate::services::get_settings().show_tray_icon {
+        return Ok(());
+    }
+
     let icon = {
         let icon_data = include_bytes!("../../../icons/icon64.png");
         let img = image::load_from_memory(icon_data)?;

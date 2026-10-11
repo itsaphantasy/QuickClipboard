@@ -120,6 +120,13 @@ pub async fn show_tray_menu(app: AppHandle) -> Result<(), String> {
         menu_item_with_state("toggle", "显示/隐藏", Some("ti ti-app-window"), is_force_update),
         separator_item(),
         menu_item_with_state("settings", "设置", Some("ti ti-settings"), is_force_update),
+        menu_item_with_state(
+            "screenshot",
+            "截屏",
+            Some("ti ti-screenshot"),
+            is_force_update || !settings.screenshot_enabled,
+        ),
+
         CtxMenuItem::submenu(
             "pin-images",
             "贴图",
@@ -214,6 +221,18 @@ fn handle_tray_menu_selection(app: &AppHandle, selected_id: &str) {
         "toggle" => {
             crate::toggle_main_window_visibility(app);
         }
+        
+        "screenshot" => {
+            let app = app.clone();
+            std::thread::spawn(move || {
+                std::thread::sleep(std::time::Duration::from_millis(150));
+                crate::windows::screenshot_window::auto_selection::clear_auto_selection_cache();
+                if let Err(e) = crate::windows::screenshot_window::start_screenshot(&app) {
+                    eprintln!("启动截图窗口失败: {}", e);
+                }
+            });
+        }
+
         "settings" => {
             let _ = crate::windows::settings_window::open_settings_window(app);
         }

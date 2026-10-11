@@ -54,6 +54,7 @@ export const defaultSettings = {
   openSettingsShortcut: '',
   quickpasteShortcut: 'Ctrl+`',
   transferShelfCreateShortcut: '',
+  screenshotShortcut: 'Ctrl+Shift+A',
   numberShortcuts: true,
   numberShortcutsModifier: 'Ctrl',
   
@@ -93,7 +94,6 @@ export const defaultSettings = {
   autoFocusSearch: false,
   pasteWithFormat: true,
   pasteShortcutMode: 'ctrl_v',
-  leftClickAction: 'single_paste',
   modifierClickMultiSelect: true,
   pasteToTop: false,
   showListShortcuts: true,
@@ -122,6 +122,22 @@ export const defaultSettings = {
   quickpastePasteOnModifierRelease: true,
   quickpasteScrollSound: true,
   quickpasteScrollSoundPath: 'sounds/roll.mp3',
+  
+  // 截屏设置
+  screenshotEnabled: true,
+  screenshotShortcut: 'Ctrl+Shift+A',
+  screenshotQuickSaveShortcut: '',
+  screenshotQuickPinShortcut: '',
+  screenshotQuickOcrShortcut: '',
+  screenshotQuality: 85,
+  screenshotAutoSave: false,
+  screenshotShowHints: true,
+  screenshotElementDetection: 'all',
+  screenshotMagnifierEnabled: true,
+  screenshotHintsEnabled: true,
+  screenshotColorIncludeFormat: true,
+  screenshotWindowLifecycleMode: 'quick',
+  screenshotAutoDisposeMinutes: 10,
   
   // AI 配置
   aiTranslationEnabled: false,

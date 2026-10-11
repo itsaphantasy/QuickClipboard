@@ -167,3 +167,44 @@ pub fn exit_low_memory_mode(app: tauri::AppHandle) -> Result<(), String> {
 pub fn is_low_memory_mode() -> bool {
     crate::services::low_memory::is_low_memory_mode()
 }
+
+
+fn start_screenshot_by_mode(app: &tauri::AppHandle, mode: u8) -> Result<(), String> {
+    let app_handle = app.clone();
+    std::thread::spawn(move || {
+        std::thread::sleep(std::time::Duration::from_millis(50));
+        let result = match mode {
+            0 => crate::windows::screenshot_window::start_screenshot(&app_handle),
+            1 => crate::windows::screenshot_window::start_screenshot_quick_save(&app_handle),
+            2 => crate::windows::screenshot_window::start_screenshot_quick_pin(&app_handle),
+            3 => crate::windows::screenshot_window::start_screenshot_quick_ocr(&app_handle),
+            _ => Err(format!("不支持的截屏模式: {}", mode)),
+        };
+
+        if let Err(error) = result {
+            eprintln!("启动截屏模式失败: {}", error);
+        }
+    });
+
+    Ok(())
+}
+
+#[tauri::command]
+pub fn start_screenshot(app: tauri::AppHandle) -> Result<(), String> {
+    start_screenshot_by_mode(&app, 0)
+}
+
+#[tauri::command]
+pub fn start_screenshot_quick_save(app: tauri::AppHandle) -> Result<(), String> {
+    start_screenshot_by_mode(&app, 1)
+}
+
+#[tauri::command]
+pub fn start_screenshot_quick_pin(app: tauri::AppHandle) -> Result<(), String> {
+    start_screenshot_by_mode(&app, 2)
+}
+
+#[tauri::command]
+pub fn start_screenshot_quick_ocr(app: tauri::AppHandle) -> Result<(), String> {
+    start_screenshot_by_mode(&app, 3)
+}

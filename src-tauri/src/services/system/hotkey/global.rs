@@ -371,6 +371,76 @@ pub fn register_webdav_pull_hotkey(shortcut_str: &str) -> Result<(), String> {
     })
 }
 
+
+pub fn register_screenshot_hotkey(shortcut_str: &str) -> Result<(), String> {
+    register_shortcut("screenshot", shortcut_str, |app| {
+        let app = app.clone();
+        std::thread::spawn(move || {
+            if !matches!(ensure_normal_mode_for_hotkey(&app, "启动截图"), Ok(true)) {
+                return;
+            }
+            if is_foreground_globally_disabled() {
+                return;
+            }
+            crate::windows::screenshot_window::auto_selection::clear_auto_selection_cache();
+            if let Err(e) = crate::windows::screenshot_window::start_screenshot(&app) {
+                eprintln!("启动截图窗口失败: {}", e);
+            }
+        });
+    })
+}
+
+pub fn register_screenshot_quick_save_hotkey(shortcut_str: &str) -> Result<(), String> {
+    register_shortcut("screenshot_quick_save", shortcut_str, |app| {
+        let app = app.clone();
+        std::thread::spawn(move || {
+            if !matches!(ensure_normal_mode_for_hotkey(&app, "启动快速保存截图"), Ok(true)) {
+                return;
+            }
+            if is_foreground_globally_disabled() {
+                return;
+            }
+            if let Err(e) = crate::windows::screenshot_window::start_screenshot_quick_save(&app) {
+                eprintln!("启动快速保存截图失败: {}", e);
+            }
+        });
+    })
+}
+
+pub fn register_screenshot_quick_pin_hotkey(shortcut_str: &str) -> Result<(), String> {
+    register_shortcut("screenshot_quick_pin", shortcut_str, |app| {
+        let app = app.clone();
+        std::thread::spawn(move || {
+            if !matches!(ensure_normal_mode_for_hotkey(&app, "启动快速贴图截图"), Ok(true)) {
+                return;
+            }
+            if is_foreground_globally_disabled() {
+                return;
+            }
+            if let Err(e) = crate::windows::screenshot_window::start_screenshot_quick_pin(&app) {
+                eprintln!("启动快速贴图截图失败: {}", e);
+            }
+        });
+    })
+}
+
+pub fn register_screenshot_quick_ocr_hotkey(shortcut_str: &str) -> Result<(), String> {
+    register_shortcut("screenshot_quick_ocr", shortcut_str, |app| {
+        let app = app.clone();
+        std::thread::spawn(move || {
+            if !matches!(ensure_normal_mode_for_hotkey(&app, "启动快速OCR截图"), Ok(true)) {
+                return;
+            }
+            if is_foreground_globally_disabled() {
+                return;
+            }
+            if let Err(e) = crate::windows::screenshot_window::start_screenshot_quick_ocr(&app) {
+                eprintln!("启动快速OCR截图失败: {}", e);
+            }
+        });
+    })
+}
+
 pub fn register_toggle_clipboard_monitor_hotkey(shortcut_str: &str) -> Result<(), String> {
     register_shortcut("toggle_clipboard_monitor", shortcut_str, |app| {
         let app_clone = app.clone();
@@ -773,6 +843,31 @@ pub fn reload_from_settings() -> Result<(), String> {
         
         
         
+        
+        if settings.screenshot_enabled && !settings.screenshot_shortcut.is_empty() {
+            if let Err(e) = register_screenshot_hotkey(&settings.screenshot_shortcut) {
+                eprintln!("注册截图快捷键失败: {}", e);
+            }
+        }
+        
+        if settings.screenshot_enabled && !settings.screenshot_quick_save_shortcut.is_empty() {
+            if let Err(e) = register_screenshot_quick_save_hotkey(&settings.screenshot_quick_save_shortcut) {
+                eprintln!("注册快速保存截图快捷键失败: {}", e);
+            }
+        }
+        
+        if settings.screenshot_enabled && !settings.screenshot_quick_pin_shortcut.is_empty() {
+            if let Err(e) = register_screenshot_quick_pin_hotkey(&settings.screenshot_quick_pin_shortcut) {
+                eprintln!("注册快速贴图截图快捷键失败: {}", e);
+            }
+        }
+        
+        if settings.screenshot_enabled && !settings.screenshot_quick_ocr_shortcut.is_empty() {
+            if let Err(e) = register_screenshot_quick_ocr_hotkey(&settings.screenshot_quick_ocr_shortcut) {
+                eprintln!("注册快速OCR截图快捷键失败: {}", e);
+            }
+        }
+
         if !settings.toggle_clipboard_monitor_shortcut.is_empty() {
             if let Err(e) = register_toggle_clipboard_monitor_hotkey(&settings.toggle_clipboard_monitor_shortcut) {
                 eprintln!("注册切换剪贴板监听快捷键失败: {}", e);
