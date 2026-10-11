@@ -64,3 +64,5 @@ pub fn is_portable_build() -> bool {
         .map(|name| name.contains("portable"))
         .unwrap_or(false)
 }
+
+pub mod screenshot;

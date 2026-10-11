@@ -1,3 +1,15 @@
+
+use parking_lot::Mutex as PlMutex;
+static SCROLL_DIRECTION: once_cell::sync::Lazy<PlMutex<i8>> = once_cell::sync::Lazy::new(|| PlMutex::new(0));
+
+pub fn get_scroll_direction() -> i8 {
+    *SCROLL_DIRECTION.lock()
+}
+
+pub fn reset_scroll_direction() {
+    *SCROLL_DIRECTION.lock() = 0;
+}
+
 use tauri::WebviewWindow;
 
 use super::input_common;
